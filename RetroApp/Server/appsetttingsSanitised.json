@@ -1,4 +1,14 @@
 ﻿{
-
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "Database": {
+    "ConnectionString": "mongodb://localhost:27017",
+    "DatabaseName": "RetroSessions",
+    "CollectionName": "Sessions"
+  }
 }
-

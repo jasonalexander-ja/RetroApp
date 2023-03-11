@@ -9,7 +9,6 @@ public class RetroSessionModel
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }
-    public string PassCode { get; set; } = string.Empty;
     public List<QuestionModel> Questions { get; set; } = new List<QuestionModel>();
     public List<SessionUserModel> SessionUsers { get; set; } = new List<SessionUserModel>();
 

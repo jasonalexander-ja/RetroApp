@@ -1,6 +1,7 @@
 ﻿@inject IJSRuntime JS
 @inject NavigationManager NavManager
 @inject ILocalStorageService LocalStorage
+@inject ISnackbar Snackbar
 
 <CascadingValue Value="@this">
     @ChildContent
@@ -48,6 +49,14 @@
         HubConnection = new HubConnectionBuilder()
             .WithUrl(NavManager.ToAbsoluteUri($"/session"))
             .Build();
+
+        HubConnection.On<string>("NoSuchSession", sessId =>
+        {
+            Snackbar.Add($"Couldn't find a session for {sessId}", Severity.Warning);
+            NavManager.NavigateTo("/");
+        });
+
+        HubConnection.On<RetroSession>("");
 
         await HubConnection.StartAsync();
     }
