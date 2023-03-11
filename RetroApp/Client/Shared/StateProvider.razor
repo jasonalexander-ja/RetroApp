@@ -1,0 +1,54 @@
+﻿@inject IJSRuntime JS
+@inject NavigationManager NavManager
+@inject ILocalStorageService LocalStorage
+
+<CascadingValue Value="@this">
+    @ChildContent
+</CascadingValue>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    public bool DarkMode { get; set; }
+    public HubConnection? HubConnection;
+
+    public SessionStore SessionStore { get; set; } = new SessionStore();
+
+    public async Task SetDarkMode(bool darkMode)
+    {
+        await LocalStorage.SetItemAsync("darkMode", darkMode);
+        DarkMode = darkMode;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        DarkMode = await IsDarkMode();
+        if (HubConnection == null)
+            await Connect();
+    }
+
+    public async Task<bool> IsDarkMode()
+    {
+        try
+        {
+            if (await LocalStorage.ContainKeyAsync("darkMode"))
+                return await LocalStorage.GetItemAsync<bool>("darkMode");
+
+            return await JS.InvokeAsync<bool>("isDarkMode");
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private async Task Connect()
+    {
+        HubConnection = new HubConnectionBuilder()
+            .WithUrl(NavManager.ToAbsoluteUri($"/session"))
+            .Build();
+
+        await HubConnection.StartAsync();
+    }
+}

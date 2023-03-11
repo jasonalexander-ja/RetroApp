@@ -1,0 +1,100 @@
+﻿@inherits PageBase
+@page "/"
+
+<PageTitle>Join Retro Session</PageTitle>
+
+
+<MudContainer MaxWidth="MaxWidth.Medium">
+    <MudGrid Spacing="3" Class="mt-4">
+        <MudHidden Breakpoint="Breakpoint.Xs">
+            <MudItem xs="0" sm="1" md="2" lg="3" />
+        </MudHidden>
+        <MudItem xs="12" sm="10" md="8" lg="6">
+            <MudCard>
+                <MudCardContent>
+                    <MudForm @bind-IsValid="@UserOk" @bind-Error="@UsersErrors">
+                        <MudGrid Spacing="1">
+                            <MudItem xs="12">
+                                <MudText Typo="Typo.h5" Align="Align.Center">Enter Session Code</MudText>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField 
+                                    @bind-Value="SessionId" 
+                                    Label="Session ID" 
+                                    Variant="Variant.Outlined" 
+                                    Required="true"
+                                    RequiredError="Please give a session ID."
+                                    FullWidth="true"
+                                />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField 
+                                    @bind-Value="DisplayName" 
+                                    Label="Display Name" 
+                                    Variant="Variant.Outlined" 
+                                    Required="true"
+                                    RequiredError="Please give a display name."
+                                    FullWidth="true"
+                                />
+                            </MudItem>
+                            <MudButton 
+                                Variant="Variant.Filled" 
+                                Color="Color.Secondary" 
+                                FullWidth="true"
+                                Class="mt-5"
+                                OnClick=@(() => NavigateToOther())
+                            >
+                                Join
+                            </MudButton>
+                            <MudItem xs="12" Class="pt-3">
+                                <MudDivider />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudText Typo="Typo.h5" Align="Align.Center">Creat a New Session</MudText>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField 
+                                    @bind-Value="SessionCreateCode" 
+                                    Label="Code" 
+                                    Variant="Variant.Outlined" 
+                                    Required="true"
+                                    RequiredError="Please give a create code."
+                                    FullWidth="true"
+                                />
+                            </MudItem>
+                            <MudButton 
+                                Variant="Variant.Filled" 
+                                Color="Color.Primary" 
+                                FullWidth="true"
+                                Class="mt-5"
+                                OnClick=@(() => NavigateToOther())
+                            >
+                                Create New
+                            </MudButton>
+                        </MudGrid>
+                    </MudForm>
+                </MudCardContent>
+            </MudCard>
+        </MudItem>
+        <MudHidden Breakpoint="Breakpoint.Xs">
+            <MudItem xs="0" sm="1" md="2" lg="3" />
+        </MudHidden>
+    </MudGrid>
+</MudContainer>
+
+
+@code {
+    public bool UserOk { get; set; }
+    public string[] UsersErrors { get; set; } = { };
+
+    public bool CreateSuccess { get; set; }
+    public string[] CreateErrors { get; set; } = { };
+
+    public string SessionId { get; set; } = String.Empty;
+    public string DisplayName { get; set; } = String.Empty;
+
+    public string SessionCreateCode { get; set; } = String.Empty;
+
+    public void NavigateToOther() => NavManager.NavigateTo("/other");
+
+}

@@ -1,0 +1,35 @@
+﻿<MudAppBar Color="Color.Primary">
+    <MudGrid Justify="Justify.SpaceBetween" Style="flex-wrap: nowrap;">
+        <MudItem Style="display: flex;">
+            <MudText Typo="Typo.h6">Retro Sesh</MudText>
+        </MudItem>
+        @if (StateProvider.DarkMode)
+        {
+            <MudIconButton 
+                Icon="@Icons.Material.Filled.LightMode" 
+                aria-label="Light Mode" 
+                OnClick="@ToggleDarkMode"
+                Color="Color.Secondary"
+            >
+            </MudIconButton>
+        } else
+        {
+            <MudIconButton 
+                Icon="@Icons.Material.Outlined.LightMode"
+                aria-label="Dark Mode"
+                OnClick="@ToggleDarkMode"
+                Color="Color.Secondary"
+            >
+            </MudIconButton>
+        }
+    </MudGrid>
+</MudAppBar>
+
+@code {
+    [CascadingParameter]
+    public StateProvider StateProvider { get; set; } = new StateProvider();
+
+    [Parameter]
+    public Func<Task> ToggleDarkMode { get; set; } = async () => { };
+
+}

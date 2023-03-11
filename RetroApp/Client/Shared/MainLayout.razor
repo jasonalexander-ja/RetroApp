@@ -1,0 +1,42 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider 
+    Theme="@MakeTheme()"
+    @bind-IsDarkMode="StateProvider.DarkMode" 
+/>
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <ToolBar ToggleDarkMode="ToggleDarkMode" />
+
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    [CascadingParameter]
+    public StateProvider StateProvider { get; set; } = new StateProvider();
+
+    public async Task ToggleDarkMode()
+    {
+        await StateProvider.SetDarkMode(!StateProvider.DarkMode);
+        StateHasChanged();
+    }
+
+    public static MudTheme MakeTheme()
+    {
+        var theme = new MudTheme()
+            {
+                Palette = new Palette()
+                {
+                    Primary = Colors.Pink.Default,
+                    Secondary = Colors.Cyan.Accent3,
+                }
+            };
+        theme.PaletteDark.Primary = Colors.Pink.Default;
+        theme.PaletteDark.Secondary = Colors.Cyan.Accent3;
+        return theme;
+    }
+}
