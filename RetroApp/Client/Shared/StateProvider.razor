@@ -56,7 +56,26 @@
             NavManager.NavigateTo("/");
         });
 
-        HubConnection.On<RetroSession>("");
+        HubConnection.On<RetroSession>("SessionUpdate", session =>
+        {
+            SessionStore.Session = session;
+            StateHasChanged();
+        });
+
+        HubConnection.On<SessionUser>("AddedUser", user =>
+        {
+            SessionStore.AddUser(user);
+            StateHasChanged();
+        });
+
+        HubConnection.On<RetroSession>("SessionJoined", session =>
+        {
+            SessionStore.Session = session;
+            if (NavManager.Uri == "/")
+            {
+                NavManager.NavigateTo("Challenge");
+            }
+        });
 
         await HubConnection.StartAsync();
     }
