@@ -17,7 +17,7 @@ public class SessionHub : Hub
         var session = await DBService.GetAsync(sessionId);
         if (session is null) 
         {
-            await Clients.Client(Context.ConnectionId).SendAsync("NoSuchSession");
+            await Clients.Client(Context.ConnectionId).SendAsync("NoSuchSession", sessionId);
             return;
         }
         var user = new SessionUserModel(Context.ConnectionId, userName);
@@ -25,6 +25,6 @@ public class SessionHub : Hub
 
         await Clients.Group(sessionId).SendAsync("AddedUser", user.ToDTO());
         await Groups.AddToGroupAsync(Context.ConnectionId, sessionId);
-        await Clients.Client(Context.ConnectionId).SendAsync("SessionUpdate", updatedSession);
+        await Clients.Client(Context.ConnectionId).SendAsync("SessionJoined", updatedSession.ToDTO());
     }
 }

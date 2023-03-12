@@ -1,4 +1,5 @@
 ﻿@inherits PageBase
+@inject ISnackbar Snackbar
 @page "/"
 
 <PageTitle>Join Retro Session</PageTitle>
@@ -67,7 +68,7 @@
                                 Color="Color.Primary" 
                                 FullWidth="true"
                                 Class="mt-5"
-                                OnClick=@(() => NavigateToOther())
+                                OnClick=@(() => { })
                             >
                                 Create New
                             </MudButton>
@@ -96,5 +97,20 @@
     public string SessionCreateCode { get; set; } = String.Empty;
 
     public void NavigateToOther() => NavManager.NavigateTo("/other");
+
+    public async Task JoinSession()
+    {
+        if (!UserOk)
+        {
+            Snackbar.Add("Please ensure all fields are complete. ", Severity.Warning);
+            return;
+        }
+        if (StateProvider.HubConnection is null)
+        {
+            Snackbar.Add("There was an error connecting to the server, please try again later. ", Severity.Error);
+            return;
+        }
+        await StateProvider.HubConnection.InvokeAsync("JoinSession", SessionId, DisplayName);
+    }
 
 }
