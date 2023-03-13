@@ -13,7 +13,7 @@
         <MudItem xs="12" sm="10" md="8" lg="6">
             <MudCard>
                 <MudCardContent>
-                    <MudForm @bind-IsValid="@UserOk" @bind-Error="@UsersErrors">
+                    <MudForm>
                         <MudGrid Spacing="1">
                             <MudItem xs="12">
                                 <MudText Typo="Typo.h5" Align="Align.Center">Enter Session Code</MudText>
@@ -43,13 +43,17 @@
                                 Color="Color.Secondary" 
                                 FullWidth="true"
                                 Class="mt-5"
-                                OnClick=@(() => NavigateToOther())
+                                OnClick=@(() => JoinSession())
                             >
                                 Join
                             </MudButton>
                             <MudItem xs="12" Class="pt-3">
                                 <MudDivider />
                             </MudItem>
+                        </MudGrid>
+                    </MudForm>
+                    <MudForm>
+                        <MudGrid Spacing="1">
                             <MudItem xs="12">
                                 <MudText Typo="Typo.h5" Align="Align.Center">Creat a New Session</MudText>
                             </MudItem>
@@ -85,11 +89,6 @@
 
 
 @code {
-    public bool UserOk { get; set; }
-    public string[] UsersErrors { get; set; } = { };
-
-    public bool CreateSuccess { get; set; }
-    public string[] CreateErrors { get; set; } = { };
 
     public string SessionId { get; set; } = String.Empty;
     public string DisplayName { get; set; } = String.Empty;
@@ -100,14 +99,14 @@
 
     public async Task JoinSession()
     {
-        if (!UserOk)
-        {
-            Snackbar.Add("Please ensure all fields are complete. ", Severity.Warning);
-            return;
-        }
         if (StateProvider.HubConnection is null)
         {
             Snackbar.Add("There was an error connecting to the server, please try again later. ", Severity.Error);
+            return;
+        }
+        if (String.IsNullOrEmpty(SessionId) || String.IsNullOrEmpty(DisplayName))
+        {
+            Snackbar.Add("Please ensure all fields are complete. ", Severity.Warning);
             return;
         }
         await StateProvider.HubConnection.InvokeAsync("JoinSession", SessionId, DisplayName);

@@ -10,10 +10,10 @@ public class SessionUserModel
     {
         DisplayName = userName;
         ConnectionId = connId;
+        SessionUserId = Guid.NewGuid().ToString();
     }
     [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string SessionUserId { get; set; } = String.Empty;
+    public string SessionUserId { get; set; }
     public string DisplayName { get; set; } = String.Empty;
     public string ConnectionId { get; set; } = String.Empty;
 

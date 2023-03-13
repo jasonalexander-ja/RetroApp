@@ -20,11 +20,16 @@ public class SessionHub : Hub
             await Clients.Client(Context.ConnectionId).SendAsync("NoSuchSession", sessionId);
             return;
         }
-        var user = new SessionUserModel(Context.ConnectionId, userName);
+        if (session.SessionUsers.Any(u => u.DisplayName == userName))
+        {
+            await Clients.Client(Context.ConnectionId).SendAsync("UserAlreadyExists", userName);
+            return;
+        }
+        var user = new SessionUserModel(userName, Context.ConnectionId);
         var updatedSession = await DBService.AddUserAsync(sessionId, session, user);
 
         await Clients.Group(sessionId).SendAsync("AddedUser", user.ToDTO());
         await Groups.AddToGroupAsync(Context.ConnectionId, sessionId);
-        await Clients.Client(Context.ConnectionId).SendAsync("SessionJoined", updatedSession.ToDTO());
+        await Clients.Client(Context.ConnectionId).SendAsync("SessionJoined", updatedSession.ToDTO(), user.ToDTO());
     }
 }

@@ -7,7 +7,6 @@ namespace RetroApp.Server.Models;
 public class QuestionModel
 {
     [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
     public string QuestionId { get; set; } = String.Empty;
     public string QuestionName { get; set; } = String.Empty;
     public Dictionary<string, string> Answers { get; set; } = new Dictionary<string, string>();

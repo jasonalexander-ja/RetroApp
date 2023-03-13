@@ -56,6 +56,12 @@
             NavManager.NavigateTo("/");
         });
 
+        HubConnection.On<string>("UserAlreadyExists", userName =>
+        {
+            Snackbar.Add($"A user with the name {userName} already exists. ", Severity.Warning);
+            NavManager.NavigateTo("/");
+        });
+
         HubConnection.On<RetroSession>("SessionUpdate", session =>
         {
             SessionStore.Session = session;
@@ -68,10 +74,11 @@
             StateHasChanged();
         });
 
-        HubConnection.On<RetroSession>("SessionJoined", session =>
+        HubConnection.On<RetroSession, SessionUser>("SessionJoined", (session, user) =>
         {
             SessionStore.Session = session;
-            if (NavManager.Uri == "/")
+            SessionStore.ThisUser = user;
+            if (NavManager.Uri == NavManager.BaseUri)
             {
                 NavManager.NavigateTo("Challenge");
             }
