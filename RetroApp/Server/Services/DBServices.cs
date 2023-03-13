@@ -16,8 +16,17 @@ public class DBService
         SessionsCollection = mongoDatabase.GetCollection<RetroSessionModel>(settings.Value.CollectionName);
     }
 
-    public async Task<RetroSessionModel?> GetAsync(string id) => 
-        await SessionsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+    public async Task<RetroSessionModel?> GetAsync(string id)
+    {
+        try
+        {
+            return await SessionsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+    }
 
     public async Task<bool> ExistsAsync(string id) =>
         await SessionsCollection.Find(x => x.Id == id).AnyAsync();

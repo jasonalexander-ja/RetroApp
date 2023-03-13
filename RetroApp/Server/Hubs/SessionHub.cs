@@ -14,7 +14,7 @@ public class SessionHub : Hub
 
     public async Task JoinSession(string sessionId, string userName)
     {
-        var session = await DBService.GetAsync(sessionId);
+        RetroSessionModel? session = await DBService.GetAsync(sessionId);
         if (session is null) 
         {
             await Clients.Client(Context.ConnectionId).SendAsync("NoSuchSession", sessionId);
